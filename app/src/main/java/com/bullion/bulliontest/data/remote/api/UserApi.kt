@@ -8,6 +8,7 @@ import com.bullion.bulliontest.data.remote.response.LoginResponse
 import com.bullion.bulliontest.data.remote.response.RegisterResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -20,7 +21,7 @@ interface UserApi {
     @POST("api/v1/auth/login")
     suspend fun login(
         @Body users: LoginRequest
-    ): CommonResponse<LoginResponse>
+    ): Response<CommonResponse<LoginResponse>>
 
     @Multipart
     @POST("api/v1/auth/register")
@@ -34,17 +35,17 @@ interface UserApi {
         @Part("address") address: RequestBody,
         @Part photo: MultipartBody.Part,
         @Part("password") password: RequestBody,
-    ): CommonResponse<RegisterResponse?>
+    ): Response<CommonResponse<RegisterResponse?>>
 
     @GET("api/v1/users")
     suspend fun getListUser(
         @Query("offset") offset: Int,
         @Query("limit") limit: Int
-    ): CommonResponse<List<UserResponse>>
+    ): Response<CommonResponse<List<UserResponse>>>
 
     @POST("api/v1/admin/{id}/update")
     suspend fun updateUser(
         @Path("id") id: String,
         @Body body: UserRequest
-    ): CommonResponse<UserResponse>
+    ): Response<CommonResponse<UserResponse>>
 }

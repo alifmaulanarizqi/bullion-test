@@ -22,20 +22,17 @@ class UserDataSource @Inject constructor(
         address: String,
         photo: MultipartBody.Part,
         password: String,
-    ) {
-        api.register(
-            firstName = firstName.toTextRequestBody(),
-            lastName = lastName.toTextRequestBody(),
-            gender = gender.toTextRequestBody(),
-            dateOfBirth = dateOfBirth.toTextRequestBody(),
-            email = email.toTextRequestBody(),
-            phone = phone.toTextRequestBody(),
-            address = address.toTextRequestBody(),
-            photo = photo,
-            password = password.toTextRequestBody()
-        )
-    }
-
+    ) = api.register(
+        firstName = firstName.toTextRequestBody(),
+        lastName = lastName.toTextRequestBody(),
+        gender = gender.toTextRequestBody(),
+        dateOfBirth = dateOfBirth.toTextRequestBody(),
+        email = email.toTextRequestBody(),
+        phone = phone.toTextRequestBody(),
+        address = address.toTextRequestBody(),
+        photo = photo,
+        password = password.toTextRequestBody()
+    )
     suspend fun getListUser(offset: Int, limit: Int) = api.getListUser(offset, limit)
     suspend fun updateUser(id: String, body: UserRequest) = api.updateUser(id, body)
 }
