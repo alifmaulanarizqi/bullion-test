@@ -20,7 +20,7 @@ data class UserResponse(
     val email: String,
 
     @SerializedName("photo")
-    val photoBase64: String,
+    val photo: String,
 
     @SerializedName("phone")
     val phone: String,
@@ -30,4 +30,4 @@ data class UserResponse(
 )
 
 fun UserResponse.photoBytes(): ByteArray =
-    Base64.decode(photoBase64, Base64.DEFAULT)
+    Base64.decode(phone, Base64.DEFAULT)
