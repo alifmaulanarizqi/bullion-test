@@ -1,4 +1,4 @@
-package com.bullion.bulliontest.feature.splash
+package com.bullion.bulliontest.ui.feature.splash
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,7 +14,7 @@ import com.bullion.bulliontest.core.util.DisplaySvgRawFile
 import com.bullion.bulliontest.theme.dimension20
 import kotlinx.coroutines.delay
 import com.bullion.bulliontest.R
-import com.bullion.bulliontest.theme.Gradient
+import com.bullion.bulliontest.theme.GradientBackground
 
 @Composable
 fun SplashScreen(
@@ -33,7 +33,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Gradient)
+            .background(GradientBackground)
             .padding(dimension20),
         contentAlignment = Alignment.Center
     ) {

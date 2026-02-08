@@ -3,7 +3,7 @@ package com.bullion.bulliontest.navigation.destination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.bullion.bulliontest.core.util.Constant.SPLASH
-import com.bullion.bulliontest.feature.splash.SplashScreen
+import com.bullion.bulliontest.ui.feature.splash.SplashScreen
 
 fun NavGraphBuilder.splashComposable(
     onNavigateToDashboard: () -> Unit,

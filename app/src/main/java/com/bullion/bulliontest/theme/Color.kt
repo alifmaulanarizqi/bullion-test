@@ -13,7 +13,17 @@ val Black03 = Color(0xFF030303)
 val White = Color(0xFFFFFFFF)
 val Gray5D = Color(0xFF5D5D5D)
 val GrayB2 = Color(0xFFAEAEB2)
-val Gradient = Brush.linearGradient(
+val GradientBackground = Brush.linearGradient(
+    colors = listOf(
+        Orange76,
+        Orange2A,
+        Orange76,
+    ),
+    start = Offset(0f, 0f),
+    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+)
+
+val GradientText = Brush.linearGradient(
     colors = listOf(
         Brown1A,
         Orange2A,
