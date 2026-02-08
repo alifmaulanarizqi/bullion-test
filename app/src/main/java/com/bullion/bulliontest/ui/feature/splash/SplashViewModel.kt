@@ -1,4 +1,4 @@
-package com.bullion.bulliontest.feature.splash
+package com.bullion.bulliontest.ui.feature.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

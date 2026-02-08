@@ -4,7 +4,9 @@ import androidx.compose.ui.unit.dp
 
 val dimension40 = 40.dp
 val dimension36 = 36.dp
+val dimension32 = 32.dp
 val dimension30 = 30.dp
+val dimension28 = 28.dp
 val dimension24 = 24.dp
 val dimension22 = 22.dp
 val dimension20 = 20.dp
