@@ -1,6 +1,7 @@
 package com.bullion.bulliontest.di
 
 import android.util.Log
+import com.bullion.bulliontest.BuildConfig
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides

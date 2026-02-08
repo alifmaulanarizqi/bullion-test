@@ -3,6 +3,7 @@ package com.bullion.bulliontest.navigation.destination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.bullion.bulliontest.core.util.Constant.LOGIN
+import com.bullion.bulliontest.feature.login.LoginScreen
 
 fun NavGraphBuilder.loginComposable() {
     composable(LOGIN) {
