@@ -1,5 +1,7 @@
 package com.bullion.bulliontest.theme
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Brown1A = Color(0xFF91361A)
@@ -11,3 +13,12 @@ val Black03 = Color(0xFF030303)
 val White = Color(0xFFFFFFFF)
 val Gray5D = Color(0xFF5D5D5D)
 val GrayB2 = Color(0xFFAEAEB2)
+val Gradient = Brush.linearGradient(
+    colors = listOf(
+        Brown1A,
+        Orange2A,
+        Orange76,
+    ),
+    start = Offset(0f, 0f),
+    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+)

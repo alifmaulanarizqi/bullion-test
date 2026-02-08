@@ -74,9 +74,13 @@ android {
 }
 
 dependencies {
+    // splash screen
+    implementation(libs.androidx.core.splashscreen)
+
     // Coil
     implementation(libs.coil3.compose)
     implementation(libs.coil3.ktor)
+    implementation(libs.coil3.svg)
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -88,6 +92,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.hilt.work)
+    implementation(libs.androidx.compose.ui.graphics)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.androidx.hilt.compiler)

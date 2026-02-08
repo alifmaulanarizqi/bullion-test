@@ -18,36 +18,36 @@ val AppTypography = Typography(
     titleLarge = TextStyle(
         fontFamily = poppins,
         fontSize = 28.sp,
-        color = FontColorBlack33
+        color = Black
     ),
     titleMedium = TextStyle(
         fontFamily = poppins,
         fontSize = 22.sp,
-        color = FontColorBlack33
+        color = Black
     ),
     titleSmall = TextStyle(
         fontFamily = poppins,
         fontSize = 20.sp,
-        color = FontColorBlack33
+        color = Black
     ),
     bodyLarge = TextStyle(
         fontFamily = poppins,
         fontSize = 18.sp,
-        color = FontColorBlack33
+        color = Black
     ),
     bodyMedium = TextStyle(
         fontFamily = poppins,
         fontSize = 16.sp,
-        color = FontColorBlack33
+        color = Black
     ),
     bodySmall = TextStyle(
         fontFamily = poppins,
         fontSize = 14.sp,
-        color = FontColorBlack33
+        color = Black
     ),
     labelSmall = TextStyle(
         fontFamily = poppins,
         fontSize = 12.sp,
-        color = FontColorBlack33
+        color = Black
     ),
 )
