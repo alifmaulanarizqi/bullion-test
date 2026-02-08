@@ -1,6 +1,7 @@
 package com.bullion.bulliontest.ui.feature.login
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -40,7 +43,8 @@ import com.bullion.bulliontest.ui.common.CommonTextField
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel(),
+    onNavigateToRegister: () -> Unit,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
@@ -62,6 +66,7 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
                 .background(GradientBackground)
         ) {
@@ -69,14 +74,15 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = dimension24)
-                    .weight(1f),
+                    .weight(0.7f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 DisplaySvgRawFile(
                     model = R.raw.bullion_logo,
                     contentDescription = "Bullion Logo",
-                    size = 130.dp
+                    height = 130.dp,
+                    width = 130.dp
                 )
             }
             Surface(
@@ -88,14 +94,16 @@ fun LoginScreen(
                     .weight(1f)
             ) {
                 LoginFormCard(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
                     email = state.email,
                     password = state.password,
                     onEmailChange = viewModel::onEmailChange,
                     onPasswordChange = viewModel::onPasswordChange,
+                    emailErrorText = state.emailError,
+                    passwordErrorText = state.passwordError,
                     onSignIn = { /* TODO */ },
-                    onAddNewUsers = { /* TODO */ },
+                    onAddNewUsers = {
+                        onNavigateToRegister()
+                    },
                 )
             }
         }
@@ -104,82 +112,79 @@ fun LoginScreen(
 
 @Composable
 fun LoginFormCard(
-    modifier: Modifier = Modifier,
     email: String,
     password: String,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    emailErrorText: String? = null,
+    passwordErrorText: String? = null,
     onSignIn: () -> Unit,
     onAddNewUsers: () -> Unit,
 ) {
-    Surface(
-        modifier = modifier
+    Column(
+        modifier = Modifier
             .fillMaxWidth()
-            .background(White),
-        shape = RoundedCornerShape(topStart = dimension28, topEnd = dimension28),
-        color = White,
+            .padding(horizontal = dimension24, vertical = dimension32),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = dimension24, vertical = dimension32),
+                .weight(1f)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                Text(
-                    text = "Email Address",
-                    style = AppTypography.bodySmall.copy(
-                        fontWeight = FontWeight.W500,
-                        brush = GradientText
-                    )
+            Text(
+                text = "Email Address",
+                style = AppTypography.bodySmall.copy(
+                    fontWeight = FontWeight.W500,
+                    brush = GradientText
                 )
-                Spacer(Modifier.height(dimension8))
-                CommonTextField(
-                    value = email,
-                    onValueChange = onEmailChange,
-                    placeholder = "Enter your email",
-                    keyboardType = KeyboardType.Email
+            )
+            Spacer(Modifier.height(dimension8))
+            CommonTextField(
+                value = email,
+                onValueChange = onEmailChange,
+                placeholder = "Enter your email",
+                keyboardType = KeyboardType.Email,
+                isError = emailErrorText != null,
+                errorText = emailErrorText
+            )
+            Spacer(Modifier.height(dimension16))
+            Text(
+                text = "Password",
+                style = AppTypography.bodySmall.copy(
+                    fontWeight = FontWeight.W500,
+                    brush = GradientText
                 )
-                Spacer(Modifier.height(dimension16))
-                Text(
-                    text = "Password",
-                    style = AppTypography.bodySmall.copy(
-                        fontWeight = FontWeight.W500,
-                        brush = GradientText
-                    )
+            )
+            Spacer(Modifier.height(dimension8))
+            CommonTextField(
+                value = password,
+                onValueChange = onPasswordChange,
+                placeholder = "Enter your password",
+                keyboardType = KeyboardType.Password,
+                isPassword = true,
+                isError = passwordErrorText != null,
+                errorText = passwordErrorText
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(dimension16),
+        ) {
+            CommonFilledButton(
+                onClick = onSignIn,
+                text = "Sign In",
+                textStyle = AppTypography.labelSmall.copy(
+                    color = White,
+                    fontWeight = FontWeight.W500
                 )
-                Spacer(Modifier.height(dimension8))
-                CommonTextField(
-                    value = password,
-                    onValueChange = onPasswordChange,
-                    placeholder = "Enter your password",
-                    keyboardType = KeyboardType.Password,
-                    isPassword = true
+            )
+            CommonFilledButton(
+                onClick = onAddNewUsers,
+                text = "Add new Users",
+                textStyle = AppTypography.labelSmall.copy(
+                    color = White,
+                    fontWeight = FontWeight.W500
                 )
-            }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(dimension16),
-            ) {
-                CommonFilledButton(
-                    onClick = onSignIn,
-                    text = "Sign In",
-                    textStyle = AppTypography.labelSmall.copy(
-                        color = White,
-                        fontWeight = FontWeight.W500
-                    )
-                )
-                CommonFilledButton(
-                    onClick = onAddNewUsers,
-                    text = "Add new Users",
-                    textStyle = AppTypography.labelSmall.copy(
-                        color = White,
-                        fontWeight = FontWeight.W500
-                    )
-                )
-            }
+            )
         }
     }
 }

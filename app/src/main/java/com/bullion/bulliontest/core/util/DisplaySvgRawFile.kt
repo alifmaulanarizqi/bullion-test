@@ -1,7 +1,9 @@
 package com.bullion.bulliontest.core.util
 
 import android.content.Context
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -18,7 +20,8 @@ import coil3.svg.SvgDecoder
 fun DisplaySvgRawFile(
     model: Any,
     contentDescription: String? = null,
-    size: Dp = dimension30,
+    height: Dp = dimension30,
+    width: Dp = dimension30,
     colorFilter: ColorFilter? = null
 ) {
     val context = LocalContext.current
@@ -30,7 +33,9 @@ fun DisplaySvgRawFile(
             .build(),
         imageLoader = imageLoader,
         contentDescription = contentDescription,
-        modifier = Modifier.size(size),
+        modifier = Modifier
+            .height(height)
+            .width(width),
         colorFilter = colorFilter
     )
 }

@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.bullion.bulliontest.core.util.Constant.SPLASH
 import com.bullion.bulliontest.navigation.destination.loginComposable
+import com.bullion.bulliontest.navigation.destination.registerComposable
 import com.bullion.bulliontest.navigation.destination.splashComposable
 
 @Composable
@@ -24,6 +25,11 @@ fun Navigation(
             onNavigateToDashboard = screen.login,
             onNavigateToLogin = screen.login
         )
-        loginComposable()
+        loginComposable(
+            onNavigateToRegister = screen.register
+        )
+        registerComposable(
+            onBack = screen.backFromRegister
+        )
     }
 }
