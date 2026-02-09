@@ -385,22 +385,3 @@ private fun RadioBoxOption(
         )
     }
 }
-
-@Composable
-@Preview
-fun EditScreenPreview() {
-    EditScreen(
-        userDetail = UserDetail(
-            id = "",
-            firstName = "",
-            lastName = "",
-            gender = "",
-            dateOfBirth = "",
-            email = "",
-            phone = "",
-            address = "",
-            photo = "",
-        ),
-        onBack = {}
-    )
-}
