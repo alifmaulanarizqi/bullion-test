@@ -5,8 +5,12 @@ import androidx.navigation.compose.composable
 import com.bullion.bulliontest.core.util.Constant.DASHBOARD
 import com.bullion.bulliontest.ui.feature.dashboard.DashboardScreen
 
-fun NavGraphBuilder.dashboardComposable() {
+fun NavGraphBuilder.dashboardComposable(
+    onNavigateToRegister: () -> Unit
+) {
     composable(DASHBOARD) {
-        DashboardScreen()
+        DashboardScreen(
+            onNavigateToRegister = onNavigateToRegister
+        )
     }
 }

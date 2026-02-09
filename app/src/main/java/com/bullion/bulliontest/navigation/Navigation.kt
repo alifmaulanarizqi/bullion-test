@@ -33,6 +33,8 @@ fun Navigation(
         registerComposable(
             onBack = screen.backFromRegister
         )
-        dashboardComposable()
+        dashboardComposable(
+            onNavigateToRegister= screen.register
+        )
     }
 }

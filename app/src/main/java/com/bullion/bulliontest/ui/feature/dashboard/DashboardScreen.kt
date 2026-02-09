@@ -72,7 +72,8 @@ import com.bullion.bulliontest.ui.common.CommonFilledButton
 
 @Composable
 fun DashboardScreen(
-    viewModel: DashboardViewModel = hiltViewModel()
+    viewModel: DashboardViewModel = hiltViewModel(),
+    onNavigateToRegister: () -> Unit
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
@@ -175,7 +176,8 @@ fun DashboardScreen(
                         ListCard(
                             state = state,
                             listState = listState,
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            onNavigateToRegister = onNavigateToRegister
                         )
                     }
                 }
@@ -210,7 +212,8 @@ fun DashboardScreen(
 private fun ListCard(
     state: DashboardState,
     listState: LazyListState,
-    viewModel: DashboardViewModel
+    viewModel: DashboardViewModel,
+    onNavigateToRegister: () -> Unit
 ) {
     when {
         state.isLoading && state.users.isEmpty() -> {
@@ -321,7 +324,7 @@ private fun ListCard(
                         ) {
                             CommonFilledButton(
                                 text = "Add Users",
-                                onClick = { },
+                                onClick = onNavigateToRegister,
                                 buttonColor = Blue92,
                                 textStyle = AppTypography.labelSmall.copy(
                                     fontWeight = FontWeight.W500,
