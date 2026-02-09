@@ -23,6 +23,8 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,6 +46,7 @@ import com.bullion.bulliontest.core.util.DisplaySvgRawFile
 import com.bullion.bulliontest.core.util.GenderEnum
 import com.bullion.bulliontest.theme.AppTypography
 import com.bullion.bulliontest.theme.Black
+import com.bullion.bulliontest.theme.Black03
 import com.bullion.bulliontest.theme.GradientBackground
 import com.bullion.bulliontest.theme.GradientText
 import com.bullion.bulliontest.theme.Gray93
@@ -59,6 +62,7 @@ import com.bullion.bulliontest.theme.dimension8
 import com.bullion.bulliontest.ui.common.CommonDateTextField
 import com.bullion.bulliontest.ui.common.CommonFilledButton
 import com.bullion.bulliontest.ui.common.CommonImageTextField
+import com.bullion.bulliontest.ui.common.CommonLoading
 import com.bullion.bulliontest.ui.common.CommonPasswordTextField
 import com.bullion.bulliontest.ui.common.CommonTextField
 
@@ -76,14 +80,25 @@ fun RegisterScreen(
                 is RegisterEvent.ShowError -> {
                     snackBarHostState.showSnackbar(ev.message)
                 }
-                RegisterEvent.Success -> {
-//                    onSuccessNavigate()
+                is RegisterEvent.Success -> {
+                    snackBarHostState.showSnackbar(ev.message)
                 }
             }
         }
     }
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    containerColor = White,
+                    contentColor = Black03,
+                    actionColor = Gray93
+                )
+            }
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -109,6 +124,11 @@ fun RegisterScreen(
                 )
             }
         }
+
+        // Loading Overlay
+        CommonLoading(
+            isLoading = state.isLoading
+        )
     }
 }
 
@@ -128,16 +148,20 @@ private fun RegisterFormCard(
             value = state.firstName,
             onValueChange = viewModel::onFirstNameChange,
             valueErrorText = state.firstNameError,
+            isError = state.firstNameError != null,
             placeholder = "Enter your first name",
-            label = "First Name"
+            label = "First Name",
+            keyboardType = KeyboardType.Text
         )
         Spacer(modifier = Modifier.height(dimension16))
         TextFieldWithLabel(
             value = state.lastName,
             onValueChange = viewModel::onLastNameChange,
             valueErrorText = state.lastNameError,
+            isError = state.lastNameError != null,
             placeholder = "Enter your last name",
-            label = "Last Name"
+            label = "Last Name",
+            keyboardType = KeyboardType.Text
         )
         Spacer(modifier = Modifier.height(dimension16))
         Text(
@@ -175,16 +199,30 @@ private fun RegisterFormCard(
             value = state.email,
             onValueChange = viewModel::onEmailChange,
             valueErrorText = state.emailError,
+            isError = state.emailError != null,
             placeholder = "Enter your email",
-            label = "Email Address"
+            label = "Email Address",
+            keyboardType = KeyboardType.Email
         )
         Spacer(modifier = Modifier.height(dimension16))
         TextFieldWithLabel(
             value = state.phoneNumber,
             onValueChange = viewModel::onPhoneNumberChange,
             valueErrorText = state.phoneNumberError,
+            isError = state.phoneNumberError != null,
             placeholder = "Enter your phone number",
-            label = "Phone Number"
+            label = "Phone Number",
+            keyboardType = KeyboardType.Phone
+        )
+        Spacer(modifier = Modifier.height(dimension16))
+        TextFieldWithLabel(
+            value = state.address,
+            onValueChange = viewModel::onAddressChange,
+            valueErrorText = state.addressError,
+            isError = state.addressError != null,
+            placeholder = "Enter your address",
+            label = "Address",
+            keyboardType = KeyboardType.Text
         )
         Spacer(modifier = Modifier.height(dimension16))
         Text(
@@ -257,7 +295,7 @@ private fun RegisterFormCard(
         )
         Spacer(modifier = Modifier.height(dimension24))
         CommonFilledButton(
-            onClick = { /* TODO */ },
+            onClick = viewModel::submit,
             text = "Add Users",
             textStyle = AppTypography.labelSmall.copy(
                 color = White,
@@ -317,8 +355,10 @@ private fun TextFieldWithLabel(
     value: String,
     onValueChange: (String) -> Unit,
     valueErrorText: String? = null,
+    isError: Boolean,
     placeholder: String,
     label: String,
+    keyboardType: KeyboardType
 ) {
     Column {
         Text(
@@ -333,8 +373,8 @@ private fun TextFieldWithLabel(
             value = value,
             onValueChange = onValueChange,
             placeholder = placeholder,
-            keyboardType = KeyboardType.Email,
-            isError = valueErrorText != null,
+            keyboardType = keyboardType,
+            isError = isError,
             errorText = valueErrorText
         )
     }

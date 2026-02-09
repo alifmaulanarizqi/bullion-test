@@ -52,18 +52,15 @@ class LoginViewModel @Inject constructor(
     }
 
     fun submit() {
-        Log.d("waduh", "1")
         val state = _uiState.value
         if (!state.canSubmit) return
 
-        Log.d("waduh", "2")
         viewModelScope.launch {
             _uiState.update { current ->
                 current.copy(
                     isLoading = true
                 )
             }
-            Log.d("waduh", "3")
 
             val request = LoginRequest(
                 email = state.email,
@@ -72,7 +69,6 @@ class LoginViewModel @Inject constructor(
 
             try {
                 val login = userRepository.login(request)
-                Log.d("waduh", "4")
                 sessionManager.saveToken(login.token)
 
                 _uiState.update { current ->
@@ -82,9 +78,7 @@ class LoginViewModel @Inject constructor(
                 }
 
                 _event.emit(LoginEvent.Success)
-                Log.d("waduh", "5")
             } catch (e: Exception) {
-                Log.d("waduh", "error: ${e.message}")
                 _uiState.update { current ->
                     current.copy(isLoading = false)
                 }
