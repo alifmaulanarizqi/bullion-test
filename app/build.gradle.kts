@@ -53,7 +53,7 @@ android {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
             resValue("string", "app_name", "BullionTest Dev")
-            buildConfigField("String", "BASE_URL", "\"api-test.bullionecosystem.com/\"")
+            buildConfigField("String", "BASE_URL", "\"https://api-test.bullionecosystem.com/\"")
         }
 
         create("staging") {
@@ -61,14 +61,14 @@ android {
             applicationIdSuffix = ".stg"
             versionNameSuffix = "-stg"
             resValue("string", "app_name", "BullionTest Staging")
-            buildConfigField("String", "BASE_URL", "\"api-test.bullionecosystem.com/\"")
+            buildConfigField("String", "BASE_URL", "\"https://api-test.bullionecosystem.com/\"")
         }
 
         create("production") {
             dimension = "env"
             // biasanya tanpa suffix biar app id final bersih
             resValue("string", "app_name", "BullionTest")
-            buildConfigField("String", "BASE_URL", "\"api-test.bullionecosystem.com/\"")
+            buildConfigField("String", "BASE_URL", "\"https://api-test.bullionecosystem.com/\"")
         }
     }
 }

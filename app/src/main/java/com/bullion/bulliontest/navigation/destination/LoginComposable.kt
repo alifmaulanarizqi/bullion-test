@@ -7,10 +7,12 @@ import com.bullion.bulliontest.ui.feature.login.LoginScreen
 
 fun NavGraphBuilder.loginComposable(
     onNavigateToRegister: () -> Unit,
+    onNavigateToDashboard: () -> Unit,
 ) {
     composable(LOGIN) {
         LoginScreen(
-            onNavigateToRegister = onNavigateToRegister
+            onNavigateToRegister = onNavigateToRegister,
+            onNavigateToDashboard = onNavigateToDashboard,
         )
     }
 }

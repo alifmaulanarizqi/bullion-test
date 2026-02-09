@@ -1,8 +1,8 @@
 package com.bullion.bulliontest.ui.feature.login
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +13,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,8 +32,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bullion.bulliontest.R
 import com.bullion.bulliontest.core.util.DisplaySvgRawFile
 import com.bullion.bulliontest.theme.AppTypography
+import com.bullion.bulliontest.theme.Black03
 import com.bullion.bulliontest.theme.GradientBackground
 import com.bullion.bulliontest.theme.GradientText
+import com.bullion.bulliontest.theme.Gray93
 import com.bullion.bulliontest.theme.White
 import com.bullion.bulliontest.theme.dimension16
 import com.bullion.bulliontest.theme.dimension24
@@ -39,12 +43,14 @@ import com.bullion.bulliontest.theme.dimension28
 import com.bullion.bulliontest.theme.dimension32
 import com.bullion.bulliontest.theme.dimension8
 import com.bullion.bulliontest.ui.common.CommonFilledButton
+import com.bullion.bulliontest.ui.common.CommonLoading
 import com.bullion.bulliontest.ui.common.CommonTextField
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     onNavigateToRegister: () -> Unit,
+    onNavigateToDashboard: () -> Unit,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
@@ -55,57 +61,77 @@ fun LoginScreen(
                 is LoginEvent.ShowError -> {
                     snackBarHostState.showSnackbar(ev.message)
                 }
-                LoginEvent.Success -> {
-//                    onSuccessNavigate()
+                is LoginEvent.Success -> {
+                    onNavigateToDashboard()
                 }
             }
         }
     }
 
-    Scaffold { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
-                .background(GradientBackground)
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    containerColor = White,
+                    contentColor = Black03,
+                    actionColor = Gray93
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = dimension24)
-                    .weight(0.7f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding)
+                    .background(GradientBackground)
             ) {
-                DisplaySvgRawFile(
-                    model = R.raw.bullion_logo,
-                    contentDescription = "Bullion Logo",
-                    height = 130.dp,
-                    width = 130.dp
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = dimension24)
+                        .weight(0.7f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    DisplaySvgRawFile(
+                        model = R.raw.bullion_logo,
+                        contentDescription = "Bullion Logo",
+                        height = 130.dp,
+                        width = 130.dp
+                    )
+                }
+                Surface(
+                    shape = RoundedCornerShape(topStart = dimension28, topEnd = dimension28),
+                    color = Color.White,
+                    shadowElevation = dimension8,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    LoginFormCard(
+                        email = state.email,
+                        password = state.password,
+                        onEmailChange = viewModel::onEmailChange,
+                        onPasswordChange = viewModel::onPasswordChange,
+                        emailErrorText = state.emailError,
+                        passwordErrorText = state.passwordError,
+                        onSignIn = viewModel::submit,
+                        onAddNewUsers = {
+                            onNavigateToRegister()
+                        },
+                    )
+                }
             }
-            Surface(
-                shape = RoundedCornerShape(topStart = dimension28, topEnd = dimension28),
-                color = Color.White,
-                shadowElevation = dimension8,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                LoginFormCard(
-                    email = state.email,
-                    password = state.password,
-                    onEmailChange = viewModel::onEmailChange,
-                    onPasswordChange = viewModel::onPasswordChange,
-                    emailErrorText = state.emailError,
-                    passwordErrorText = state.passwordError,
-                    onSignIn = { /* TODO */ },
-                    onAddNewUsers = {
-                        onNavigateToRegister()
-                    },
-                )
-            }
+
+            // Loading Overlay
+            CommonLoading(
+                isLoading = state.isLoading
+            )
         }
     }
 }
