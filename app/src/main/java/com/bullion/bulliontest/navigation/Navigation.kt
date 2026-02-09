@@ -23,7 +23,7 @@ fun Navigation(
         SPLASH
     ) {
         splashComposable(
-            onNavigateToDashboard = screen.login,
+            onNavigateToDashboard = screen.dashboard,
             onNavigateToLogin = screen.login
         )
         loginComposable(

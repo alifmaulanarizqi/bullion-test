@@ -37,7 +37,7 @@ interface UserApi {
         @Part("password") password: RequestBody,
     ): Response<CommonResponse<RegisterResponse?>>
 
-    @GET("api/v1/users")
+    @GET("api/v1/admin")
     suspend fun getListUser(
         @Query("offset") offset: Int,
         @Query("limit") limit: Int

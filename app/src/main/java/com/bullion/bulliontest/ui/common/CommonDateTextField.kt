@@ -1,7 +1,6 @@
 package com.bullion.bulliontest.ui.common
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.bullion.bulliontest.core.util.DateUtil.formatDate
+import com.bullion.bulliontest.core.util.DateUtil.formatDateDayMonthYear
 import com.bullion.bulliontest.theme.AppTypography
 import com.bullion.bulliontest.theme.Black1E
 import com.bullion.bulliontest.theme.Brown1A
@@ -97,7 +96,7 @@ fun CommonDateTextField(
                     onClick = {
                         val selected = datePickerState.selectedDateMillis
                         if (selected != null) {
-                            onValueChange(formatDate(selected))
+                            onValueChange(formatDateDayMonthYear(selected))
                         }
                         onClick(false)
                     }

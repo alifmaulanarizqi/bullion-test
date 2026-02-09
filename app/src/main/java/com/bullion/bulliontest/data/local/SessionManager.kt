@@ -18,7 +18,7 @@ class SessionManager @Inject constructor(
     }
 
     fun saveToken(token: String) {
-        prefs.edit().putString(KEY_TOKEN, token).apply()
+        prefs.edit().putString(KEY_TOKEN, token).commit()
     }
 
     fun getToken(): String? = prefs.getString(KEY_TOKEN, null)
