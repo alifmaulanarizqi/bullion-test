@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.bullion.bulliontest.core.util.Constant.SPLASH
 import com.bullion.bulliontest.navigation.destination.dashboardComposable
+import com.bullion.bulliontest.navigation.destination.dashboardComposable
+import com.bullion.bulliontest.navigation.destination.editComposable
 import com.bullion.bulliontest.navigation.destination.loginComposable
 import com.bullion.bulliontest.navigation.destination.registerComposable
 import com.bullion.bulliontest.navigation.destination.splashComposable
@@ -31,10 +33,14 @@ fun Navigation(
             onNavigateToDashboard = screen.dashboard
         )
         registerComposable(
-            onBack = screen.backFromRegister
+            onBack = screen.backPop
         )
         dashboardComposable(
-            onNavigateToRegister= screen.register
+            onNavigateToRegister= screen.register,
+            onNavigateToEdit = screen.editUser
+        )
+        editComposable(
+            onBack = screen.backPop
         )
     }
 }

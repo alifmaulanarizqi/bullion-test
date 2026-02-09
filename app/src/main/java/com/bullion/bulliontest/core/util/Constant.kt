@@ -6,4 +6,5 @@ object Constant {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val DASHBOARD = "dashboard"
+    const val EDIT = "edit"
 }

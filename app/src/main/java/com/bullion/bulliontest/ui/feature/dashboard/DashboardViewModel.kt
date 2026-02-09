@@ -3,6 +3,8 @@ package com.bullion.bulliontest.ui.feature.dashboard
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bullion.bulliontest.core.util.GenderEnum
+import com.bullion.bulliontest.core.util.StringUtil.validateEmail
 import com.bullion.bulliontest.data.repository.UserRepository
 import com.bullion.bulliontest.domain.model.ApiErrorException
 import dagger.hilt.android.lifecycle.HiltViewModel

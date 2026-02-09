@@ -1,11 +1,15 @@
 package com.bullion.bulliontest.navigation
 
+import android.net.Uri
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.bullion.bulliontest.core.util.Constant.DASHBOARD
+import com.bullion.bulliontest.core.util.Constant.EDIT
 import com.bullion.bulliontest.core.util.Constant.LOGIN
 import com.bullion.bulliontest.core.util.Constant.REGISTER
 import com.bullion.bulliontest.core.util.Constant.SPLASH
+import com.bullion.bulliontest.domain.model.UserDetail
+import com.google.gson.Gson
 
 class Screens(navHostController: NavHostController) {
     val login: () -> Unit = {
@@ -18,7 +22,7 @@ class Screens(navHostController: NavHostController) {
         navHostController.navigate(REGISTER)
     }
 
-    val backFromRegister: () -> Unit = {
+    val backPop: () -> Unit = {
         navHostController.popBackStack()
     }
 
@@ -30,4 +34,11 @@ class Screens(navHostController: NavHostController) {
             launchSingleTop = true
         }
     }
+
+    val editUser: (UserDetail) -> Unit = { userDetail ->
+        val gson = Gson()
+        val userJson = Uri.encode(gson.toJson(userDetail))
+        navHostController.navigate("$EDIT/$userJson")
+    }
+
 }

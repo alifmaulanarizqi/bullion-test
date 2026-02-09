@@ -48,6 +48,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bullion.bulliontest.core.util.DateUtil
 import com.bullion.bulliontest.domain.model.User
+import com.bullion.bulliontest.domain.model.UserDetail
 import com.bullion.bulliontest.theme.AppTypography
 import com.bullion.bulliontest.theme.Black
 import com.bullion.bulliontest.theme.Black03
@@ -73,7 +74,8 @@ import com.bullion.bulliontest.ui.common.CommonFilledButton
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    onNavigateToEdit: (user: UserDetail) -> Unit,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
@@ -201,7 +203,10 @@ fun DashboardScreen(
                 DetailUserDialog(
                     user = state.selectedUser,
                     onDismiss = { viewModel.dismissDetailDialog() },
-                    onEdit = { }
+                    onEdit = {
+                        viewModel.dismissDetailDialog()
+                        onNavigateToEdit(state.selectedUser)
+                    }
                 )
             }
         }
