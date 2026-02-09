@@ -2,6 +2,7 @@ package com.bullion.bulliontest.navigation
 
 import androidx.navigation.NavHostController
 import com.bullion.bulliontest.core.util.Constant.LOGIN
+import com.bullion.bulliontest.core.util.Constant.REGISTER
 import com.bullion.bulliontest.core.util.Constant.SPLASH
 
 class Screens(navHostController: NavHostController) {
@@ -9,5 +10,13 @@ class Screens(navHostController: NavHostController) {
         navHostController.navigate(LOGIN) {
             popUpTo(SPLASH) { inclusive = true }
         }
+    }
+
+    val register: () -> Unit = {
+        navHostController.navigate(REGISTER)
+    }
+
+    val backFromRegister: () -> Unit = {
+        navHostController.popBackStack()
     }
 }

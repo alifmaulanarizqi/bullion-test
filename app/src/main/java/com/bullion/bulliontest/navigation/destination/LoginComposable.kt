@@ -5,8 +5,12 @@ import androidx.navigation.compose.composable
 import com.bullion.bulliontest.core.util.Constant.LOGIN
 import com.bullion.bulliontest.ui.feature.login.LoginScreen
 
-fun NavGraphBuilder.loginComposable() {
+fun NavGraphBuilder.loginComposable(
+    onNavigateToRegister: () -> Unit,
+) {
     composable(LOGIN) {
-        LoginScreen()
+        LoginScreen(
+            onNavigateToRegister = onNavigateToRegister
+        )
     }
 }

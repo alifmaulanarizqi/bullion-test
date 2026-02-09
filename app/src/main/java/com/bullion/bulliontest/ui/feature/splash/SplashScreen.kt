@@ -40,7 +40,8 @@ fun SplashScreen(
         DisplaySvgRawFile(
             model = R.raw.bullion_logo,
             contentDescription = "Bullion Logo",
-            size = 250.dp
+            width = 250.dp,
+            height = 250.dp
         )
     }
 }
