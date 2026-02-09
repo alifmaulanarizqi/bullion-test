@@ -20,12 +20,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -35,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -46,7 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bullion.bulliontest.R
 import com.bullion.bulliontest.core.util.DateUtil
+import com.bullion.bulliontest.core.util.DisplaySvgRawFile
 import com.bullion.bulliontest.domain.model.User
 import com.bullion.bulliontest.domain.model.UserDetail
 import com.bullion.bulliontest.theme.AppTypography
@@ -69,6 +69,7 @@ import com.bullion.bulliontest.theme.dimension32
 import com.bullion.bulliontest.theme.dimension6
 import com.bullion.bulliontest.theme.dimension8
 import com.bullion.bulliontest.ui.common.CommonBase64Image
+import com.bullion.bulliontest.ui.common.CommonCarousel
 import com.bullion.bulliontest.ui.common.CommonFilledButton
 
 @Composable
@@ -80,6 +81,7 @@ fun DashboardScreen(
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
+    val banners by viewModel.banners.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
@@ -115,20 +117,6 @@ fun DashboardScreen(
                     actionColor = Gray93
                 )
             }
-        },
-        floatingActionButton = {
-            if (!state.isLoading && !state.isRefreshing) {
-                FloatingActionButton(
-                    onClick = { viewModel.refresh() },
-                    containerColor = Orange2A,
-                    contentColor = White
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = "Refresh"
-                    )
-                }
-            }
         }
     ) { innerPadding ->
         Box(
@@ -143,12 +131,16 @@ fun DashboardScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = dimension24)
-                        .weight(0.35f),
+                        .weight(0.6f),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
                 ) {
-
+                    Spacer(modifier = Modifier.height(dimension16))
+                    AppBarSection()
+                    Spacer(modifier = Modifier.height(dimension16))
+                    CommonCarousel(
+                        banners = banners,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
                 Surface(
                     shape = RoundedCornerShape(topStart = dimension28, topEnd = dimension28),
@@ -214,6 +206,38 @@ fun DashboardScreen(
 }
 
 @Composable
+private fun AppBarSection() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimension24),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            contentAlignment = Alignment.BottomStart
+        ) {
+            DisplaySvgRawFile(
+                model = R.raw.bullion_logo,
+                contentDescription = "Bullion Logo",
+                width = 103.dp,
+                height = 32.dp
+            )
+        }
+        Text(
+            text = "Logout",
+            style = AppTypography.labelSmall.copy(
+                fontWeight = FontWeight.W600,
+                color = White
+            )
+        )
+    }
+}
+
+@Composable
 private fun ListCard(
     state: DashboardState,
     listState: LazyListState,
@@ -222,14 +246,6 @@ private fun ListCard(
 ) {
     when {
         state.isLoading && state.users.isEmpty() -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = Orange2A)
-            }
-        }
-        state.isRefreshing && state.users.isEmpty() -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -259,23 +275,6 @@ private fun ListCard(
                 contentPadding = PaddingValues(dimension16),
                 verticalArrangement = Arrangement.spacedBy(dimension16)
             ) {
-                // Refreshing indicator at top
-                if (state.isRefreshing && state.users.isNotEmpty()) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(dimension16),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(
-                                color = White,
-                                modifier = Modifier.size(dimension24)
-                            )
-                        }
-                    }
-                }
-
                 // list
                 items(
                     items = state.users,
