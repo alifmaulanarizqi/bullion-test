@@ -1,5 +1,6 @@
 package com.bullion.bulliontest.ui.feature.register
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.bullion.bulliontest.core.util.GenderEnum
 import com.bullion.bulliontest.core.util.StringUtil.validateConfirmPassword
@@ -132,6 +133,25 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
         _uiState.update { current ->
             current.copy(
                 showDialogDate = newValue
+            )
+        }
+    }
+
+    fun onPhotoChange(newValue: String) {
+        _uiState.update { current ->
+            val err = if(newValue.isEmpty()) "Photo profile is required" else null
+            current.copy(
+                photo = newValue,
+                photoTouched = true,
+                photoError = err
+            )
+        }
+    }
+
+    fun onPhotoPicked(newValue: Uri) {
+        _uiState.update { current ->
+            current.copy(
+                photoUri = newValue
             )
         }
     }

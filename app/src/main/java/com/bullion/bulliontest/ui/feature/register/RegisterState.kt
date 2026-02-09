@@ -1,5 +1,6 @@
 package com.bullion.bulliontest.ui.feature.register
 
+import android.net.Uri
 import com.bullion.bulliontest.core.util.GenderEnum
 
 data class RegisterState(
@@ -11,6 +12,7 @@ data class RegisterState(
     val showDialogDate: Boolean = false,
     val phoneNumber: String = "",
     val photo: String = "",
+    val photoUri: Uri? = null,
     val password: String = "",
     val passwordVisible: Boolean = false,
     val confirmPassword: String = "",

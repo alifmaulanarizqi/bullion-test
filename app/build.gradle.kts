@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.runtime)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.androidx.hilt.compiler)

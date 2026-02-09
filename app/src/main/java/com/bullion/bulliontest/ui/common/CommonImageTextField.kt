@@ -1,28 +1,27 @@
 package com.bullion.bulliontest.ui.common
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.bullion.bulliontest.core.util.DateUtil.formatDate
 import com.bullion.bulliontest.theme.AppTypography
-import com.bullion.bulliontest.theme.Black1E
+import com.bullion.bulliontest.theme.Blue92
 import com.bullion.bulliontest.theme.Brown1A
 import com.bullion.bulliontest.theme.GrayB2
 import com.bullion.bulliontest.theme.GrayD6
@@ -30,16 +29,25 @@ import com.bullion.bulliontest.theme.Orange2A
 import com.bullion.bulliontest.theme.dimension28
 
 @Composable
-fun CommonDateTextField(
-    modifier: Modifier = Modifier,
+fun CommonImageTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
     isError: Boolean = false,
     errorText: String? = null,
-    onClick: (showDialog: Boolean) -> Unit,
-    showDialog: Boolean = false,
+    onImagePicked: (Uri) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            onImagePicked(uri)
+            onValueChange("Image selected")
+        }
+    }
+
+    val openPicker = { imagePickerLauncher.launch("image/*") }
 
     OutlinedTextField(
         value = value,
@@ -47,9 +55,10 @@ fun CommonDateTextField(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(55.dp)
-            .clickable {
-                onClick(true)
-              },
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { openPicker() },
         readOnly = true,
         singleLine = true,
         isError = isError,
@@ -68,13 +77,13 @@ fun CommonDateTextField(
         trailingIcon = {
             IconButton(
                 onClick = {
-                    onClick(true)
+                    openPicker()
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.CalendarMonth,
-                    contentDescription = "Pick date",
-                    tint = Black1E
+                    imageVector = Icons.Outlined.AttachFile,
+                    contentDescription = "Pick image",
+                    tint = Blue92
                 )
             }
         },
@@ -86,28 +95,4 @@ fun CommonDateTextField(
             cursorColor = Orange2A
         )
     )
-
-    if (showDialog) {
-        val datePickerState = rememberDatePickerState()
-
-        DatePickerDialog(
-            onDismissRequest = { onClick(false) },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val selected = datePickerState.selectedDateMillis
-                        if (selected != null) {
-                            onValueChange(formatDate(selected))
-                        }
-                        onClick(false)
-                    }
-                ) { Text("OK") }
-            },
-            dismissButton = {
-                TextButton(onClick = { onClick(false) }) { Text("Cancel") }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
-    }
 }

@@ -111,7 +111,7 @@ fun LoginScreen(
 }
 
 @Composable
-fun LoginFormCard(
+private fun LoginFormCard(
     email: String,
     password: String,
     onEmailChange: (String) -> Unit,
