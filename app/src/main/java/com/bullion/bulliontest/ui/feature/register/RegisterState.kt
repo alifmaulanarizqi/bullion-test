@@ -8,10 +8,13 @@ data class RegisterState(
     val email: String = "",
     val gender: GenderEnum? = null,
     val dateOfBirth: String = "",
+    val showDialogDate: Boolean = false,
     val phoneNumber: String = "",
     val photo: String = "",
     val password: String = "",
+    val passwordVisible: Boolean = false,
     val confirmPassword: String = "",
+    val confirmPasswordVisible: Boolean = false,
 
     val firstNameError: String? = null,
     val lastNameError: String? = null,

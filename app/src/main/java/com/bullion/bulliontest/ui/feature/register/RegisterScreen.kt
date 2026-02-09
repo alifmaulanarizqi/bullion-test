@@ -61,7 +61,9 @@ import com.bullion.bulliontest.theme.dimension24
 import com.bullion.bulliontest.theme.dimension28
 import com.bullion.bulliontest.theme.dimension32
 import com.bullion.bulliontest.theme.dimension8
+import com.bullion.bulliontest.ui.common.CommonDateTextField
 import com.bullion.bulliontest.ui.common.CommonFilledButton
+import com.bullion.bulliontest.ui.common.CommonPasswordTextField
 import com.bullion.bulliontest.ui.common.CommonTextField
 
 @Composable
@@ -151,33 +153,105 @@ fun RegisterScreen(
                         value = state.firstName,
                         onValueChange = viewModel::onFirstNameChange,
                         valueErrorText = state.firstNameError,
-                        placeholder = "Enter your first name"
+                        placeholder = "Enter your first name",
+                        label = "First Name"
                     )
                     Spacer(modifier = Modifier.height(dimension16))
                     TextFieldWithLabel(
                         value = state.lastName,
                         onValueChange = viewModel::onLastNameChange,
                         valueErrorText = state.lastNameError,
-                        placeholder = "Enter your last name"
+                        placeholder = "Enter your last name",
+                        label = "Last Name"
                     )
                     Spacer(modifier = Modifier.height(dimension16))
+                    Text(
+                        text = "Gender",
+                        style = AppTypography.bodySmall.copy(
+                            fontWeight = FontWeight.W500,
+                            brush = GradientText
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(dimension8))
                     GenderRadioBoxRow(
                         selected = state.gender,
                         onSelected = viewModel::onGenderChange
+                    )
+                    Spacer(modifier = Modifier.height(dimension16))
+                    CommonDateTextField(
+                        value = state.dateOfBirth,
+                        onValueChange = viewModel::onDateOfBirthChange,
+                        placeholder = "Enter your date of birth",
+                        isError = state.dateOfBirthError != null,
+                        errorText = state.dateOfBirthError,
+                        showDialog = state.showDialogDate,
+                        onClick = viewModel::onDateOfBirthClick
                     )
                     Spacer(modifier = Modifier.height(dimension16))
                     TextFieldWithLabel(
                         value = state.email,
                         onValueChange = viewModel::onEmailChange,
                         valueErrorText = state.emailError,
-                        placeholder = "Enter your email"
+                        placeholder = "Enter your email",
+                        label = "Email Address"
                     )
                     Spacer(modifier = Modifier.height(dimension16))
                     TextFieldWithLabel(
                         value = state.phoneNumber,
                         onValueChange = viewModel::onPhoneNumberChange,
                         valueErrorText = state.phoneNumberError,
-                        placeholder = "Enter your phone number"
+                        placeholder = "Enter your phone number",
+                        label = "Phone Number"
+                    )
+                    Spacer(modifier = Modifier.height(dimension16))
+                    Text(
+                        text = "Password",
+                        style = AppTypography.bodySmall.copy(
+                            fontWeight = FontWeight.W500,
+                            brush = GradientText
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(dimension8))
+                    Text(
+                        text = "Min 8 Char | Min 1 Capital and Number",
+                        style = AppTypography.labelSmall.copy(
+                            color = Gray93
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(dimension8))
+                    CommonPasswordTextField(
+                        value = state.password,
+                        onValueChange = viewModel::onPasswordChange,
+                        placeholder = "Enter your password",
+                        isError = state.passwordError != null,
+                        errorText = state.passwordError,
+                        passwordVisible = state.passwordVisible,
+                        onClickEyeIcon = viewModel::onPasswordVisibleChange
+                    )
+                    Spacer(modifier = Modifier.height(dimension16))
+                    Text(
+                        text = "Confirm Password",
+                        style = AppTypography.bodySmall.copy(
+                            fontWeight = FontWeight.W500,
+                            brush = GradientText
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(dimension8))
+                    Text(
+                        text = "Make sure the password matches",
+                        style = AppTypography.labelSmall.copy(
+                            color = Gray93
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(dimension8))
+                    CommonPasswordTextField(
+                        value = state.confirmPassword,
+                        onValueChange = viewModel::onConfirmPasswordChange,
+                        placeholder = "Enter your confirm password",
+                        isError = state.confirmPasswordError != null,
+                        errorText = state.confirmPasswordError,
+                        passwordVisible = state.confirmPasswordVisible,
+                        onClickEyeIcon = viewModel::onConfirmPasswordVisibleChange
                     )
                     Spacer(modifier = Modifier.height(dimension24))
                     CommonFilledButton(
@@ -200,10 +274,11 @@ fun TextFieldWithLabel(
     onValueChange: (String) -> Unit,
     valueErrorText: String? = null,
     placeholder: String,
+    label: String,
 ) {
     Column {
         Text(
-            text = "Email Address",
+            text = label,
             style = AppTypography.bodySmall.copy(
                 fontWeight = FontWeight.W500,
                 brush = GradientText

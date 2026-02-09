@@ -2,7 +2,9 @@ package com.bullion.bulliontest.ui.feature.register
 
 import androidx.lifecycle.ViewModel
 import com.bullion.bulliontest.core.util.GenderEnum
+import com.bullion.bulliontest.core.util.StringUtil.validateConfirmPassword
 import com.bullion.bulliontest.core.util.StringUtil.validateEmail
+import com.bullion.bulliontest.core.util.StringUtil.validatePasswordRegister
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,6 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
     fun onFirstNameChange(newValue: String) {
         _uiState.update { current ->
             val err = if(newValue.isEmpty()) "First name is required" else null
-            current.copy()
             current.copy(
                 firstName = newValue,
                 firstNameTouched = true,
@@ -34,7 +35,6 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
     fun onLastNameChange(newValue: String) {
         _uiState.update { current ->
             val err = if(newValue.isEmpty()) "Last name is required" else null
-            current.copy()
             current.copy(
                 lastName = newValue,
                 lastNameTouched = true,
@@ -46,7 +46,6 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
     fun onGenderChange(newValue: GenderEnum?) {
         _uiState.update { current ->
             val err = if(newValue != null) "Gender is required" else null
-            current.copy()
             current.copy(
                 gender = newValue,
                 genderTouched = true,
@@ -58,7 +57,6 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
     fun onEmailChange(newValue: String) {
         _uiState.update { current ->
             val err = validateEmail(newValue)
-            current.copy()
             current.copy(
                 email = newValue,
                 emailTouched = true,
@@ -70,11 +68,70 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
     fun onPhoneNumberChange(newValue: String) {
         _uiState.update { current ->
             val err = if(newValue.isEmpty()) "Phone number is required" else null
-            current.copy()
             current.copy(
                 phoneNumber = newValue,
                 phoneNumberTouched = true,
                 phoneNumberError = err
+            )
+        }
+    }
+
+    fun onPasswordChange(newValue: String) {
+        _uiState.update { current ->
+            val err = validatePasswordRegister(newValue)
+            current.copy(
+                password = newValue,
+                passwordTouched = true,
+                passwordError = err
+            )
+        }
+    }
+
+    fun onPasswordVisibleChange() {
+        _uiState.update { current ->
+            current.copy(
+                passwordVisible = !current.passwordVisible
+            )
+        }
+    }
+
+    fun onConfirmPasswordChange(newValue: String) {
+        _uiState.update { current ->
+            val err = validateConfirmPassword(
+                password = current.password,
+                confirmPassword = newValue
+            )
+            current.copy(
+                confirmPassword = newValue,
+                confirmPasswordTouched = true,
+                confirmPasswordError = err
+            )
+        }
+    }
+
+    fun onConfirmPasswordVisibleChange() {
+        _uiState.update { current ->
+            current.copy(
+                confirmPasswordVisible = !current.passwordVisible
+            )
+        }
+    }
+
+    fun onDateOfBirthChange(newValue: String) {
+        _uiState.update { current ->
+            val err = if(newValue.isEmpty()) "Date of birth is required" else null
+            current.copy(
+                dateOfBirth = newValue,
+                dateOfBirthTouched = true,
+                dateOfBirthError = err
+            )
+        }
+    }
+
+    fun onDateOfBirthClick(newValue: Boolean) {
+        _uiState.update { current ->
+            current.copy(
+                showDialogDate = newValue
             )
         }
     }
