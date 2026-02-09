@@ -11,6 +11,7 @@ data class RegisterState(
     val dateOfBirth: String = "",
     val showDialogDate: Boolean = false,
     val phoneNumber: String = "",
+    val address: String = "",
     val photo: String = "",
     val photoUri: Uri? = null,
     val password: String = "",
@@ -24,6 +25,7 @@ data class RegisterState(
     val genderError: String? = null,
     val dateOfBirthError: String? = null,
     val phoneNumberError: String? = null,
+    val addressError: String? = null,
     val photoError: String? = null,
     val passwordError: String? = null,
     val confirmPasswordError: String? = null,
@@ -34,6 +36,7 @@ data class RegisterState(
     val genderTouched: Boolean = false,
     val dateOfBirthTouched: Boolean = false,
     val phoneNumberTouched: Boolean = false,
+    val addressTouched: Boolean = false,
     val photoTouched: Boolean = false,
     val passwordTouched: Boolean = false,
     val confirmPasswordTouched: Boolean = false,
@@ -43,15 +46,15 @@ data class RegisterState(
     val canSubmit: Boolean
         get() = emailError == null && passwordError == null &&
                 firstNameError == null && lastNameError == null && genderError == null &&
-                dateOfBirthError == null && phoneNumberError == null &&
+                dateOfBirthError == null && phoneNumberError == null && addressError == null &&
                 photoError == null && confirmPasswordError == null &&
                 email.isNotBlank() && password.isNotBlank() &&
                 firstName.isNotBlank() && lastName.isNotBlank() && gender != null &&
-                dateOfBirth.isNotBlank() && phoneNumber.isNotBlank() &&
+                dateOfBirth.isNotBlank() && phoneNumber.isNotBlank() && address.isNotBlank() &&
                 photo.isNotBlank() && confirmPassword.isNotBlank()
 }
 
 sealed interface RegisterEvent {
     data class ShowError(val message: String) : RegisterEvent
-    object Success : RegisterEvent
+    data class Success(val message: String) : RegisterEvent
 }
