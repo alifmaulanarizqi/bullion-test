@@ -51,6 +51,7 @@ import com.bullion.bulliontest.domain.model.User
 import com.bullion.bulliontest.theme.AppTypography
 import com.bullion.bulliontest.theme.Black
 import com.bullion.bulliontest.theme.Black03
+import com.bullion.bulliontest.theme.Blue92
 import com.bullion.bulliontest.theme.GradientBackground
 import com.bullion.bulliontest.theme.GradientText
 import com.bullion.bulliontest.theme.Gray5D
@@ -67,6 +68,7 @@ import com.bullion.bulliontest.theme.dimension32
 import com.bullion.bulliontest.theme.dimension6
 import com.bullion.bulliontest.theme.dimension8
 import com.bullion.bulliontest.ui.common.CommonBase64Image
+import com.bullion.bulliontest.ui.common.CommonFilledButton
 
 @Composable
 fun DashboardScreen(
@@ -317,9 +319,14 @@ private fun ListCard(
                                 .padding(dimension16),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = "No more users",
-                                style = AppTypography.bodySmall.copy(color = White)
+                            CommonFilledButton(
+                                text = "Add Users",
+                                onClick = { },
+                                buttonColor = Blue92,
+                                textStyle = AppTypography.labelSmall.copy(
+                                    fontWeight = FontWeight.W500,
+                                    color = White
+                                )
                             )
                         }
                     }
