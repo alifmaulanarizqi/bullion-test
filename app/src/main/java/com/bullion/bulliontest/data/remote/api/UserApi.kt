@@ -43,6 +43,11 @@ interface UserApi {
         @Query("limit") limit: Int
     ): Response<CommonResponse<List<UserResponse>>>
 
+    @GET("api/v1/admin/{id}")
+    suspend fun getDetailUser(
+        @Path("id") id: String,
+    ): Response<CommonResponse<UserResponse>>
+
     @POST("api/v1/admin/{id}/update")
     suspend fun updateUser(
         @Path("id") id: String,

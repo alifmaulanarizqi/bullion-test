@@ -27,26 +27,21 @@ class DashboardViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 10
-        private const val TAG = "DashboardViewModel"
     }
 
     init {
-        Log.d(TAG, "ViewModel initialized, loading first page")
         loadUsers()
     }
 
     fun loadUsers(isRefresh: Boolean = false) {
         viewModelScope.launch {
             val currentState = _uiState.value
-            Log.d(TAG, "loadUsers called - isRefresh: $isRefresh, currentPage: ${currentState.currentPage}, isLoading: ${currentState.isLoading}, hasMorePages: ${currentState.hasMorePages}")
 
             // Prevent multiple simultaneous loads
             if (!isRefresh && currentState.isLoading) {
-                Log.d(TAG, "Already loading, skipping")
                 return@launch
             }
             if (isRefresh && currentState.isRefreshing) {
-                Log.d(TAG, "Already refreshing, skipping")
                 return@launch
             }
 
@@ -62,18 +57,12 @@ class DashboardViewModel @Inject constructor(
                 val currentPage = if (isRefresh) 0 else currentState.currentPage
                 val offset = currentPage * PAGE_SIZE
 
-                Log.d(TAG, "Fetching users - offset: $offset, limit: $PAGE_SIZE")
-
                 val users = userRepository.getListUser(offset = offset, limit = PAGE_SIZE)
-
-                Log.d(TAG, "Received ${users.size} users")
 
                 _uiState.update { current ->
                     val newUsers = if (isRefresh) users else current.users + users
                     val newPage = currentPage + 1
                     val hasMore = users.size >= PAGE_SIZE
-
-                    Log.d(TAG, "Updating state - totalUsers: ${newUsers.size}, newPage: $newPage, hasMorePages: $hasMore")
 
                     current.copy(
                         users = newUsers,
@@ -85,7 +74,6 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error loading users", e)
                 val message = when (e) {
                     is ApiErrorException -> e.message
                     else -> e.localizedMessage ?: "Failed to load users"
@@ -105,18 +93,17 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun loadMoreUsers() {
-        Log.d(TAG, "loadMoreUsers called")
         if (_uiState.value.hasMorePages && !_uiState.value.isLoading) {
-            Log.d(TAG, "Triggering load more")
             loadUsers(isRefresh = false)
-        } else {
-            Log.d(TAG, "Cannot load more - hasMorePages: ${_uiState.value.hasMorePages}, isLoading: ${_uiState.value.isLoading}")
         }
     }
 
     fun refresh() {
-        Log.d(TAG, "refresh called")
         loadUsers(isRefresh = true)
+    }
+
+    fun onChangeShowDetailDialog(newValue: Boolean) {
+        _uiState.update { it.copy(showDetailDialog = newValue) }
     }
 }
 

@@ -8,7 +8,8 @@ data class DashboardState(
     val isRefreshing: Boolean = false,
     val error: String? = null,
     val currentPage: Int = 0,
-    val hasMorePages: Boolean = true
+    val hasMorePages: Boolean = true,
+    val showDetailDialog: Boolean = false,
 )
 
 sealed interface DashboardEvent {

@@ -104,6 +104,28 @@ class UserRepositoryImpl @Inject constructor(
         return result.body()?.data?.map { it.toDomain() } ?: emptyList()
     }
 
+    override suspend fun getDetailUser(id: String): User {
+        val result = remote.getDetailUser(id)
+
+        if(!result.isSuccessful) {
+            val errStr = result.errorBody()?.string()
+            val err = errStr?.let {
+                runCatching {
+                    gson.fromJson(it, ErrorResponse::class.java)
+                }.getOrNull()
+            }
+
+            throw ApiErrorException(
+                errorCode = err?.errorCode ?: result.code().toString(),
+                message = err?.errorMessage ?: "Request failed (${result.code()})",
+                messageEn = err?.errorMessageEn
+            )
+        }
+
+        return result.body()?.data?.toDomain()
+            ?: throw ApiErrorException(null, "Data is null")
+    }
+
     override suspend fun updateUser(
         id: String,
         body: UserRequest
