@@ -10,6 +10,7 @@ import com.bullion.bulliontest.domain.model.ApiErrorException
 import com.bullion.bulliontest.domain.model.Login
 import com.bullion.bulliontest.domain.model.Register
 import com.bullion.bulliontest.domain.model.User
+import com.bullion.bulliontest.domain.model.UserDetail
 import com.google.gson.Gson
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -104,7 +105,7 @@ class UserRepositoryImpl @Inject constructor(
         return result.body()?.data?.map { it.toDomain() } ?: emptyList()
     }
 
-    override suspend fun getDetailUser(id: String): User {
+    override suspend fun getDetailUser(id: String): UserDetail {
         val result = remote.getDetailUser(id)
 
         if(!result.isSuccessful) {

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bullion.bulliontest.domain.model.User
+import com.bullion.bulliontest.domain.model.UserDetail
 import com.bullion.bulliontest.theme.AppTypography
 import com.bullion.bulliontest.theme.Blue92
 import com.bullion.bulliontest.theme.Gray5D
@@ -51,21 +52,19 @@ import com.bullion.bulliontest.ui.common.CommonFilledButton
 
 @Composable
 fun DetailUserDialog(
-    user: User,
+    user: UserDetail,
     onDismiss: () -> Unit,
     onEdit: () -> Unit,
     modifier: Modifier = Modifier,
-    isShow: Boolean
 ) {
-    if(isShow) {
-        Dialog(onDismissRequest = onDismiss) {
-            // Overlay center card
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimension16),
-                contentAlignment = Alignment.Center
-            ) {
+    Dialog(onDismissRequest = onDismiss) {
+        // Overlay center card
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimension16),
+            contentAlignment = Alignment.Center
+        ) {
                 Surface(
                     modifier = modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(dimension16),
@@ -112,7 +111,7 @@ fun DetailUserDialog(
                         Spacer(Modifier.height(dimension10))
                         // Name & email
                         Text(
-                            text = user.name,
+                            text = "${user.firstName} ${user.lastName}",
                             style = AppTypography.labelSmall.copy(
                                 fontWeight = FontWeight.W500,
                             )
@@ -147,7 +146,6 @@ fun DetailUserDialog(
                         )
                     }
                 }
-            }
         }
     }
 }
@@ -174,25 +172,4 @@ private fun DetailRow(
             )
         )
     }
-}
-
-@Composable
-@Preview
-fun DetailUserDialogPreview(){
-    DetailUserDialog(
-        user = User(
-            name = "Ghalyatama Ikram Fauzi",
-            email = "john.mclean@examplepetstore.com",
-            gender = "Male",
-            phone = "082182822828",
-            dateOfBirth = "14 May 1998",
-            address = "JL Soekarno Hatta Gg Bunga Emas No.1002 Tanjung Senang, Bandar Lampung",
-            id = "asda",
-            photo = "https://api-test.bullionecosystem.com/9j/4AAQSkZJR"
-        ),
-        onDismiss = {},
-        onEdit = {},
-        modifier = Modifier,
-        isShow = true
-    )
 }

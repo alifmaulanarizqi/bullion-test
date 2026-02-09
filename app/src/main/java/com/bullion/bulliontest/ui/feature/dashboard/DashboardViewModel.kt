@@ -105,5 +105,39 @@ class DashboardViewModel @Inject constructor(
     fun onChangeShowDetailDialog(newValue: Boolean) {
         _uiState.update { it.copy(showDetailDialog = newValue) }
     }
-}
 
+    fun onUserClick(userId: String) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingDetail = true) }
+
+            try {
+                val userDetail = userRepository.getDetailUser(userId)
+
+                _uiState.update {
+                    it.copy(
+                        selectedUser = userDetail,
+                        isLoadingDetail = false,
+                        showDetailDialog = true
+                    )
+                }
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is ApiErrorException -> e.message
+                    else -> e.localizedMessage ?: "Failed to load user detail"
+                }
+
+                _uiState.update { it.copy(isLoadingDetail = false) }
+                _event.emit(DashboardEvent.ShowError(message))
+            }
+        }
+    }
+
+    fun dismissDetailDialog() {
+        _uiState.update {
+            it.copy(
+                showDetailDialog = false,
+                selectedUser = null
+            )
+        }
+    }
+}
