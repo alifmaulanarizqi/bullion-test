@@ -2,12 +2,15 @@ package com.bullion.bulliontest.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class UserResponse(
+data class UserDetailResponse(
     @SerializedName("_id")
     val id: String,
 
-    @SerializedName("name")
-    val name: String,
+    @SerializedName("first_name")
+    val firstName: String,
+
+    @SerializedName("last_name")
+    val lastName: String,
 
     @SerializedName("gender")
     val gender: String,

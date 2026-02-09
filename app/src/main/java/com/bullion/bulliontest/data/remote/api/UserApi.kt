@@ -6,6 +6,7 @@ import com.bullion.bulliontest.data.remote.response.CommonResponse
 import com.bullion.bulliontest.data.remote.response.UserResponse
 import com.bullion.bulliontest.data.remote.response.LoginResponse
 import com.bullion.bulliontest.data.remote.response.RegisterResponse
+import com.bullion.bulliontest.data.remote.response.UserDetailResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -42,6 +43,11 @@ interface UserApi {
         @Query("offset") offset: Int,
         @Query("limit") limit: Int
     ): Response<CommonResponse<List<UserResponse>>>
+
+    @GET("api/v1/admin/{id}")
+    suspend fun getDetailUser(
+        @Path("id") id: String,
+    ): Response<CommonResponse<UserDetailResponse>>
 
     @POST("api/v1/admin/{id}/update")
     suspend fun updateUser(

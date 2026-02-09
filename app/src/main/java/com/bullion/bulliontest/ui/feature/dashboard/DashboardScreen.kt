@@ -2,6 +2,7 @@ package com.bullion.bulliontest.ui.feature.dashboard
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -171,10 +172,33 @@ fun DashboardScreen(
                         }
                         ListCard(
                             state = state,
-                            listState = listState
+                            listState = listState,
+                            viewModel = viewModel
                         )
                     }
                 }
+            }
+
+            // Loading overlay saat fetch detail user
+            if (state.isLoadingDetail) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f))
+                        .clickable(enabled = false) { },
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Orange2A)
+                }
+            }
+
+            // Detail dialog
+            if (state.showDetailDialog && state.selectedUser != null) {
+                DetailUserDialog(
+                    user = state.selectedUser,
+                    onDismiss = { viewModel.dismissDetailDialog() },
+                    onEdit = { }
+                )
             }
         }
     }
@@ -184,6 +208,7 @@ fun DashboardScreen(
 private fun ListCard(
     state: DashboardState,
     listState: LazyListState,
+    viewModel: DashboardViewModel
 ) {
     when {
         state.isLoading && state.users.isEmpty() -> {
@@ -246,7 +271,12 @@ private fun ListCard(
                     items = state.users,
                     key = { it.id }
                 ) { user ->
-                    UserCard(user = user)
+                    UserCard(
+                        user = user,
+                        onClick = {
+                            viewModel.onUserClick(user.id)
+                        }
+                    )
                 }
 
                 // Loading indicator at bottom for pagination
@@ -300,9 +330,16 @@ private fun ListCard(
 }
 
 @Composable
-private fun UserCard(user: User) {
+private fun UserCard(
+    user: User,
+    onClick: (Boolean) -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = {
+                onClick(true)
+            }),
         shape = RoundedCornerShape(dimension8),
         colors = CardDefaults.cardColors(
             containerColor = White
@@ -360,4 +397,3 @@ private fun UserCard(user: User) {
         }
     }
 }
-

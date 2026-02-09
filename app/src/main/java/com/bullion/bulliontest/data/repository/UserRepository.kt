@@ -5,6 +5,7 @@ import com.bullion.bulliontest.data.remote.request.UserRequest
 import com.bullion.bulliontest.domain.model.Login
 import com.bullion.bulliontest.domain.model.Register
 import com.bullion.bulliontest.domain.model.User
+import com.bullion.bulliontest.domain.model.UserDetail
 import okhttp3.MultipartBody
 
 interface UserRepository {
@@ -21,5 +22,6 @@ interface UserRepository {
         password: String,
     ): Register
     suspend fun getListUser(offset: Int, limit: Int): List<User>
+    suspend fun getDetailUser(id: String): UserDetail
     suspend fun updateUser(id: String, body: UserRequest): User
 }

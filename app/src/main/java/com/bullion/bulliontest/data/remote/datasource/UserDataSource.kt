@@ -34,5 +34,6 @@ class UserDataSource @Inject constructor(
         password = password.toTextRequestBody()
     )
     suspend fun getListUser(offset: Int, limit: Int) = api.getListUser(offset, limit)
+    suspend fun getDetailUser(id: String) = api.getDetailUser(id)
     suspend fun updateUser(id: String, body: UserRequest) = api.updateUser(id, body)
 }
