@@ -24,7 +24,7 @@ fun SplashScreen(
 ) {
     LaunchedEffect(Unit) {
         delay(2000)
-        viewModel.redirectToCashierPage(
+        viewModel.redirectTo(
             onNavigateToDashboard = onNavigateToDashboard,
             onNavigateToLogin = onNavigateToLogin
         )

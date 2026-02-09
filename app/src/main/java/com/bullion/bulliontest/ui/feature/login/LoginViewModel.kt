@@ -1,18 +1,28 @@
 package com.bullion.bulliontest.ui.feature.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bullion.bulliontest.core.util.StringUtil.validateEmail
 import com.bullion.bulliontest.core.util.StringUtil.validatePassword
+import com.bullion.bulliontest.data.local.SessionManager
+import com.bullion.bulliontest.data.remote.request.LoginRequest
+import com.bullion.bulliontest.data.repository.UserRepository
+import com.bullion.bulliontest.domain.model.ApiErrorException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(): ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val sessionManager: SessionManager,
+): ViewModel() {
     private val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState
 
@@ -42,8 +52,50 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     }
 
     fun submit() {
+        Log.d("waduh", "1")
         val state = _uiState.value
         if (!state.canSubmit) return
-        // todo call login api
+
+        Log.d("waduh", "2")
+        viewModelScope.launch {
+            _uiState.update { current ->
+                current.copy(
+                    isLoading = true
+                )
+            }
+            Log.d("waduh", "3")
+
+            val request = LoginRequest(
+                email = state.email,
+                password = state.password
+            )
+
+            try {
+                val login = userRepository.login(request)
+                Log.d("waduh", "4")
+                sessionManager.saveToken(login.token)
+
+                _uiState.update { current ->
+                    current.copy(
+                        isLoading = false
+                    )
+                }
+
+                _event.emit(LoginEvent.Success)
+                Log.d("waduh", "5")
+            } catch (e: Exception) {
+                Log.d("waduh", "error: ${e.message}")
+                _uiState.update { current ->
+                    current.copy(isLoading = false)
+                }
+
+                val message = when (e) {
+                    is ApiErrorException -> e.message
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _event.emit(LoginEvent.ShowError(message))
+            }
+        }
     }
 }
