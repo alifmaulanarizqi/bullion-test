@@ -23,5 +23,5 @@ interface UserRepository {
     ): Register
     suspend fun getListUser(offset: Int, limit: Int): List<User>
     suspend fun getDetailUser(id: String): UserDetail
-    suspend fun updateUser(id: String, body: UserRequest): User
+    suspend fun updateUser(id: String, body: UserRequest): UserDetail
 }

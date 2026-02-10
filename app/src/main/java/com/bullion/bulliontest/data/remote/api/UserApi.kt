@@ -14,6 +14,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -49,9 +50,9 @@ interface UserApi {
         @Path("id") id: String,
     ): Response<CommonResponse<UserDetailResponse>>
 
-    @POST("api/v1/admin/{id}/update")
+    @PUT("api/v1/admin/{id}/update")
     suspend fun updateUser(
         @Path("id") id: String,
         @Body body: UserRequest
-    ): Response<CommonResponse<UserResponse>>
+    ): Response<CommonResponse<UserDetailResponse>>
 }

@@ -2,6 +2,7 @@ package com.bullion.bulliontest.ui.feature.edit
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bullion.bulliontest.core.util.GenderEnum
@@ -27,7 +28,6 @@ import javax.inject.Inject
 @HiltViewModel
 class EditViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val application: Application
 ): ViewModel() {
     private val _uiState = MutableStateFlow(EditState())
     val uiState: StateFlow<EditState> = _uiState
@@ -178,6 +178,7 @@ class EditViewModel @Inject constructor(
 
                 _event.emit(EditEvent.Success("Berhasil mengedit user"))
             } catch (e: Exception) {
+                Log.d("waduh", "${e.message}")
                 _uiState.update { current ->
                     current.copy(isLoading = false)
                 }
