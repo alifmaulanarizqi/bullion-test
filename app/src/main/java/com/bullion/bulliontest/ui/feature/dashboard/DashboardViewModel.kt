@@ -1,10 +1,10 @@
 package com.bullion.bulliontest.ui.feature.dashboard
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bullion.bulliontest.data.repository.UserRepository
 import com.bullion.bulliontest.domain.model.ApiErrorException
+import com.bullion.bulliontest.domain.model.Banner
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.bullion.bulliontest.R
+import kotlinx.coroutines.flow.asStateFlow
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
@@ -25,6 +27,15 @@ class DashboardViewModel @Inject constructor(
     private val _event = MutableSharedFlow<DashboardEvent>()
     val event: SharedFlow<DashboardEvent> = _event
 
+    private val _banners = MutableStateFlow(
+        listOf(
+            Banner(R.drawable.banner),
+            Banner(R.drawable.banner),
+            Banner(R.drawable.banner),
+        )
+    )
+    val banners: StateFlow<List<Banner>> = _banners.asStateFlow()
+
     companion object {
         private const val PAGE_SIZE = 10
     }
@@ -33,41 +44,32 @@ class DashboardViewModel @Inject constructor(
         loadUsers()
     }
 
-    fun loadUsers(isRefresh: Boolean = false) {
+    fun loadUsers() {
         viewModelScope.launch {
             val currentState = _uiState.value
 
             // Prevent multiple simultaneous loads
-            if (!isRefresh && currentState.isLoading) {
-                return@launch
-            }
-            if (isRefresh && currentState.isRefreshing) {
+            if (currentState.isLoading) {
                 return@launch
             }
 
-            // Reset state on refresh
-            if (isRefresh) {
-                _uiState.update { it.copy(isRefreshing = true, error = null, currentPage = 0) }
-            } else {
-                _uiState.update { it.copy(isLoading = true, error = null) }
-            }
+            _uiState.update { it.copy(isLoading = true, error = null) }
 
             try {
                 // Calculate offset based on current page
-                val currentPage = if (isRefresh) 0 else currentState.currentPage
+                val currentPage = currentState.currentPage
                 val offset = currentPage * PAGE_SIZE
 
                 val users = userRepository.getListUser(offset = offset, limit = PAGE_SIZE)
 
                 _uiState.update { current ->
-                    val newUsers = if (isRefresh) users else current.users + users
+                    val newUsers = current.users + users
                     val newPage = currentPage + 1
                     val hasMore = users.size >= PAGE_SIZE
 
                     current.copy(
                         users = newUsers,
                         isLoading = false,
-                        isRefreshing = false,
                         error = null,
                         currentPage = newPage,
                         hasMorePages = hasMore
@@ -82,7 +84,6 @@ class DashboardViewModel @Inject constructor(
                 _uiState.update { current ->
                     current.copy(
                         isLoading = false,
-                        isRefreshing = false,
                         error = message
                     )
                 }
@@ -94,13 +95,10 @@ class DashboardViewModel @Inject constructor(
 
     fun loadMoreUsers() {
         if (_uiState.value.hasMorePages && !_uiState.value.isLoading) {
-            loadUsers(isRefresh = false)
+            loadUsers()
         }
     }
 
-    fun refresh() {
-        loadUsers(isRefresh = true)
-    }
 
     fun onChangeShowDetailDialog(newValue: Boolean) {
         _uiState.update { it.copy(showDetailDialog = newValue) }
@@ -138,6 +136,40 @@ class DashboardViewModel @Inject constructor(
                 showDetailDialog = false,
                 selectedUser = null
             )
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    users = emptyList(),
+                    currentPage = 0,
+                    hasMorePages = true,
+                    isLoading = true
+                )
+            }
+
+            try {
+                val users = userRepository.getListUser(offset = 0, limit = PAGE_SIZE)
+
+                _uiState.update {
+                    it.copy(
+                        users = users,
+                        isLoading = false,
+                        currentPage = 1,
+                        hasMorePages = users.size >= PAGE_SIZE
+                    )
+                }
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is ApiErrorException -> e.message
+                    else -> e.localizedMessage ?: "Failed to refresh users"
+                }
+
+                _uiState.update { it.copy(isLoading = false) }
+                _event.emit(DashboardEvent.ShowError(message))
+            }
         }
     }
 }

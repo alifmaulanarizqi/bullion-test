@@ -5,7 +5,10 @@ import com.bullion.bulliontest.data.remote.request.LoginRequest
 import com.bullion.bulliontest.data.remote.request.UserRequest
 import com.bullion.bulliontest.data.remote.response.ErrorResponse
 import com.bullion.bulliontest.data.repository.UserRepository
-import com.bullion.bulliontest.domain.mapper.toDomain
+import com.bullion.bulliontest.domain.mapper.toDomainDetail
+import com.bullion.bulliontest.domain.mapper.toDomainLogin
+import com.bullion.bulliontest.domain.mapper.toDomainRegister
+import com.bullion.bulliontest.domain.mapper.toDomainUser
 import com.bullion.bulliontest.domain.model.ApiErrorException
 import com.bullion.bulliontest.domain.model.Login
 import com.bullion.bulliontest.domain.model.Register
@@ -38,7 +41,7 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
 
-        return result.body()?.data?.toDomain()
+        return result.body()?.data?.toDomainLogin()
             ?: throw ApiErrorException(null, "Data is null")
     }
 
@@ -80,7 +83,7 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
 
-        return result.body()?.data?.toDomain()
+        return result.body()?.data?.toDomainRegister()
             ?: throw ApiErrorException(null, "Data is null")
     }
 
@@ -102,7 +105,7 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
 
-        return result.body()?.data?.map { it.toDomain() } ?: emptyList()
+        return result.body()?.data?.map { it.toDomainUser() } ?: emptyList()
     }
 
     override suspend fun getDetailUser(id: String): UserDetail {
@@ -123,14 +126,14 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
 
-        return result.body()?.data?.toDomain()
+        return result.body()?.data?.toDomainDetail()
             ?: throw ApiErrorException(null, "Data is null")
     }
 
     override suspend fun updateUser(
         id: String,
         body: UserRequest
-    ): User {
+    ): UserDetail {
         val result = remote.updateUser(id, body)
 
         if(!result.isSuccessful) {
@@ -148,7 +151,7 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
 
-        return result.body()?.data?.toDomain()
+        return result.body()?.data?.toDomainDetail()
             ?: throw ApiErrorException(null, "Data is null")
     }
 

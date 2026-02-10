@@ -1,4 +1,4 @@
-package com.bullion.bulliontest.ui.feature.register
+package com.bullion.bulliontest.ui.feature.edit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -59,29 +59,35 @@ import com.bullion.bulliontest.theme.dimension24
 import com.bullion.bulliontest.theme.dimension28
 import com.bullion.bulliontest.theme.dimension32
 import com.bullion.bulliontest.theme.dimension8
+import com.bullion.bulliontest.domain.model.UserDetail
 import com.bullion.bulliontest.ui.common.CommonDateTextField
 import com.bullion.bulliontest.ui.common.CommonFilledButton
-import com.bullion.bulliontest.ui.common.CommonImageTextField
 import com.bullion.bulliontest.ui.common.CommonLoading
-import com.bullion.bulliontest.ui.common.CommonPasswordTextField
 import com.bullion.bulliontest.ui.common.CommonTextField
 
 @Composable
-fun RegisterScreen(
-    viewModel: RegisterViewModel = hiltViewModel(),
+fun EditScreen(
+    userDetail: UserDetail,
+    viewModel: EditViewModel = hiltViewModel(),
     onBack: () -> Unit,
+    onBackWithRefresh: () -> Unit,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
 
+    // Initialize form with user data
+    LaunchedEffect(userDetail) {
+        viewModel.initializeUserData(userDetail)
+    }
+
     LaunchedEffect(Unit) {
         viewModel.event.collect { ev ->
             when (ev) {
-                is RegisterEvent.ShowError -> {
+                is EditEvent.ShowError -> {
                     snackBarHostState.showSnackbar(ev.message)
                 }
-                is RegisterEvent.Success -> {
-                    snackBarHostState.showSnackbar(ev.message)
+                is EditEvent.Success -> {
+                    onBackWithRefresh()
                 }
             }
         }
@@ -134,8 +140,8 @@ fun RegisterScreen(
 
 @Composable
 private fun RegisterFormCard(
-    state: RegisterState,
-    viewModel: RegisterViewModel
+    state: EditState,
+    viewModel: EditViewModel
 ) {
     Column(
         modifier = Modifier
@@ -224,79 +230,10 @@ private fun RegisterFormCard(
             label = "Address",
             keyboardType = KeyboardType.Text
         )
-        Spacer(modifier = Modifier.height(dimension16))
-        Text(
-            text = "Photo Profile",
-            style = AppTypography.bodySmall.copy(
-                fontWeight = FontWeight.W500,
-                brush = GradientText
-            )
-        )
-        Spacer(modifier = Modifier.height(dimension8))
-        CommonImageTextField(
-            value = state.photo,
-            onValueChange = viewModel::onPhotoChange,
-            placeholder = "Enter your photo profile",
-            onImagePicked = { uri ->
-                viewModel.onPhotoPicked(uri)
-            },
-            isError = state.photoError != null,
-            errorText = state.photoError,
-        )
-        Spacer(modifier = Modifier.height(dimension16))
-        Text(
-            text = "Password",
-            style = AppTypography.bodySmall.copy(
-                fontWeight = FontWeight.W500,
-                brush = GradientText
-            )
-        )
-        Spacer(modifier = Modifier.height(dimension8))
-        Text(
-            text = "Min 8 Char | Min 1 Capital and Number",
-            style = AppTypography.labelSmall.copy(
-                color = Gray93
-            )
-        )
-        Spacer(modifier = Modifier.height(dimension8))
-        CommonPasswordTextField(
-            value = state.password,
-            onValueChange = viewModel::onPasswordChange,
-            placeholder = "Enter your password",
-            isError = state.passwordError != null,
-            errorText = state.passwordError,
-            passwordVisible = state.passwordVisible,
-            onClickEyeIcon = viewModel::onPasswordVisibleChange
-        )
-        Spacer(modifier = Modifier.height(dimension16))
-        Text(
-            text = "Confirm Password",
-            style = AppTypography.bodySmall.copy(
-                fontWeight = FontWeight.W500,
-                brush = GradientText
-            )
-        )
-        Spacer(modifier = Modifier.height(dimension8))
-        Text(
-            text = "Make sure the password matches",
-            style = AppTypography.labelSmall.copy(
-                color = Gray93
-            )
-        )
-        Spacer(modifier = Modifier.height(dimension8))
-        CommonPasswordTextField(
-            value = state.confirmPassword,
-            onValueChange = viewModel::onConfirmPasswordChange,
-            placeholder = "Enter your confirm password",
-            isError = state.confirmPasswordError != null,
-            errorText = state.confirmPasswordError,
-            passwordVisible = state.confirmPasswordVisible,
-            onClickEyeIcon = viewModel::onConfirmPasswordVisibleChange
-        )
         Spacer(modifier = Modifier.height(dimension24))
         CommonFilledButton(
             onClick = viewModel::submit,
-            text = "Add Users",
+            text = "Update User",
             textStyle = AppTypography.labelSmall.copy(
                 color = White,
                 fontWeight = FontWeight.W500
