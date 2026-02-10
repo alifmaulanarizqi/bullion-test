@@ -26,6 +26,13 @@ class Screens(navHostController: NavHostController) {
         navHostController.popBackStack()
     }
 
+    val backPopWithRefresh: () -> Unit = {
+        navHostController.previousBackStackEntry
+            ?.savedStateHandle
+            ?.set("refresh", true)
+        navHostController.popBackStack()
+    }
+
     val dashboard: () -> Unit = {
         navHostController.navigate(DASHBOARD) {
             popUpTo(navHostController.graph.findStartDestination().id) {

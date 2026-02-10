@@ -77,11 +77,21 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
     onNavigateToRegister: () -> Unit,
     onNavigateToEdit: (user: UserDetail) -> Unit,
+    shouldRefresh: Boolean = false,
+    onRefreshHandled: () -> Unit = {},
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
     val banners by viewModel.banners.collectAsStateWithLifecycle()
+
+    // Check if refresh is required (coming back from Edit screen)
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
+            viewModel.refresh()
+            onRefreshHandled()
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->

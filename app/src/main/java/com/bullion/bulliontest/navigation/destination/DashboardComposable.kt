@@ -9,11 +9,15 @@ import com.bullion.bulliontest.ui.feature.dashboard.DashboardScreen
 fun NavGraphBuilder.dashboardComposable(
     onNavigateToRegister: () -> Unit,
     onNavigateToEdit: (user: UserDetail) -> Unit,
+    onRefreshRequired: () -> Boolean,
+    onRefreshHandled: () -> Unit,
 ) {
     composable(DASHBOARD) {
         DashboardScreen(
             onNavigateToRegister = onNavigateToRegister,
-            onNavigateToEdit = onNavigateToEdit
+            onNavigateToEdit = onNavigateToEdit,
+            shouldRefresh = onRefreshRequired(),
+            onRefreshHandled = onRefreshHandled
         )
     }
 }

@@ -10,7 +10,8 @@ import com.bullion.bulliontest.ui.feature.edit.EditScreen
 import com.google.gson.Gson
 
 fun NavGraphBuilder.editComposable(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onBackWithRefresh: () -> Unit,
 ) {
     composable(
         route = "$EDIT/{userDetailJson}",
@@ -26,7 +27,8 @@ fun NavGraphBuilder.editComposable(
 
         EditScreen(
             userDetail = userDetail,
-            onBack = onBack
+            onBack = onBack,
+            onBackWithRefresh = onBackWithRefresh
         )
     }
 }

@@ -138,4 +138,38 @@ class DashboardViewModel @Inject constructor(
             )
         }
     }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    users = emptyList(),
+                    currentPage = 0,
+                    hasMorePages = true,
+                    isLoading = true
+                )
+            }
+
+            try {
+                val users = userRepository.getListUser(offset = 0, limit = PAGE_SIZE)
+
+                _uiState.update {
+                    it.copy(
+                        users = users,
+                        isLoading = false,
+                        currentPage = 1,
+                        hasMorePages = users.size >= PAGE_SIZE
+                    )
+                }
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is ApiErrorException -> e.message
+                    else -> e.localizedMessage ?: "Failed to refresh users"
+                }
+
+                _uiState.update { it.copy(isLoading = false) }
+                _event.emit(DashboardEvent.ShowError(message))
+            }
+        }
+    }
 }

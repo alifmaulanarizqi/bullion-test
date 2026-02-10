@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.bullion.bulliontest.core.util.Constant.DASHBOARD
 import com.bullion.bulliontest.core.util.Constant.SPLASH
 import com.bullion.bulliontest.navigation.destination.dashboardComposable
 import com.bullion.bulliontest.navigation.destination.editComposable
@@ -36,10 +37,21 @@ fun Navigation(
         )
         dashboardComposable(
             onNavigateToRegister= screen.register,
-            onNavigateToEdit = screen.editUser
+            onNavigateToEdit = screen.editUser,
+            onRefreshRequired = {
+                navHostController.currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<Boolean>("refresh") == true
+            },
+            onRefreshHandled = {
+                navHostController.currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.remove<Boolean>("refresh")
+            }
         )
         editComposable(
-            onBack = screen.backPop
+            onBack = screen.backPop,
+            onBackWithRefresh = screen.backPopWithRefresh
         )
     }
 }

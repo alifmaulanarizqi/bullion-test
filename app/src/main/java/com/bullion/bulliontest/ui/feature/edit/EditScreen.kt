@@ -70,6 +70,7 @@ fun EditScreen(
     userDetail: UserDetail,
     viewModel: EditViewModel = hiltViewModel(),
     onBack: () -> Unit,
+    onBackWithRefresh: () -> Unit,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
@@ -86,7 +87,7 @@ fun EditScreen(
                     snackBarHostState.showSnackbar(ev.message)
                 }
                 is EditEvent.Success -> {
-                    snackBarHostState.showSnackbar(ev.message)
+                    onBackWithRefresh()
                 }
             }
         }
